@@ -99,5 +99,6 @@ Gemini API
 Streamlit
 
 YouTube Transcript API
+---
 
 ### 💡 Built by hAIck Team
