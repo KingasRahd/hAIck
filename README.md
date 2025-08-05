@@ -22,7 +22,7 @@ Whether it's a lecture, tech talk, or tutorial — hAIck makes videos *interacti
 
 ## 🏗️ Architecture Diagram
 
-<pre> +-------------------------+ | YouTube Video URL | +-----------+------------+ | v +-------------------------+ | YouTube Transcript API | +-----------+------------+ | v +----------------------------+ | Transcript Chunker | | - Sentence-wise (QnA) | | - Segment-wise (Summary) | +-----------+----------------+ | v +-----------------------------+ | Gemini LLM via LangChain | | - QnA Engine | | - Summary Generator | | - Memory + Context Handler | +-----------+-----------------+ | v +-----------------------------+ | Streamlit Frontend | +-----------------------------+ </pre>
+![Architecture Diagram](pictures/Flow.png)
 
 ---
 
@@ -45,40 +45,44 @@ Whether it's a lecture, tech talk, or tutorial — hAIck makes videos *interacti
 ```bash
 git clone https://github.com/KingasRahd/hAIck.git
 cd hAIck
-2. Create and Activate a Virtual Environment
-bash
+```
+### 2. Create and Activate a Virtual Environment
+```bash
 Copy code
 python -m venv venv
 source venv/bin/activate    # On Windows: venv\Scripts\activate
-3. Install Dependencies
-bash
+```
+### 3. Install Dependencies
+```bash
 Copy code
 pip install -r requirements.txt
-4. Add Your Gemini API Key
+```
+### 4. Add Your Gemini API Key
+```bash
 Create a .env file in the root directory:
 
 env
 Copy code
 API_KEY=your_api_key_here
-5. Run the App
-bash
+```
+### 5. Run the App
+```bash
 Copy code
 streamlit run app.py
-🚀 Usage Instructions
-🎯 What You Can Do
+```
+
+## 🚀 Usage Instructions
+#### 🎯 What You Can Do
+
 Input a YouTube video URL (with an available transcript)
 
 Ask questions like:
 
 “What is the main idea discussed?”
 
-“Summarize the 3rd section.”
-
 “What were the pros and cons mentioned?”
 
 Upload previous chat sessions for seamless context carry-over
-
-Choose summary granularity: overview or detailed
 
 📸 Example Flow
 Paste a YouTube video link
