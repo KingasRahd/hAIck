@@ -4,6 +4,8 @@ from streamlit_chat import message
 import helper
 import uuid
 import requests
+from langchain_google_genai._common import GoogleGenerativeAIError
+
 
 # UI Design
 st.sidebar.title('hAIck')
@@ -99,3 +101,5 @@ except requests.exceptions.SSLError:
     col[1].markdown('##### Please use VPN to proceed...!!!')
 except UnboundLocalError as e:
     col[1].markdown('##### Quota exceeded.Try again later...!!!')
+except GoogleGenerativeAIError:
+    pass
