@@ -84,20 +84,14 @@ Ask questions like:
 
 Upload previous chat sessions for seamless context carry-over
 
-📸 Example Flow
-Paste a YouTube video link
 
-Ask: “What’s the core concept explained here?”
+## 🎥 Demo Video
 
-Ask: “Any real-life use cases mentioned?”
+[![Watch the demo](https://img.youtube.com/vi/nnjZOb8NrcI/0.jpg)](https://youtu.be/nnjZOb8NrcI)
 
-Continue later with session import if needed
 
-🎥 Demo Video
-Watch hAIck in action:
-👉 Demo Video Placeholder – Coming Soon
+## 🙌 Acknowledgements
 
-🙌 Acknowledgements
 LangChain
 
 Gemini API
@@ -106,4 +100,4 @@ Streamlit
 
 YouTube Transcript API
 
-💡 Built with ❤️ by Sagnik for [Hackathon Name]
+💡 Built by hAIck Team
