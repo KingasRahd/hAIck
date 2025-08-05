@@ -66,9 +66,11 @@ def embeddor(transcript):  #embeds the chunks
     return transcript
 
 def query_embeddor(query):    #embeds the query
-    embedding=model.embed_query(query)
-    return embedding
-
+   if(query!=None):
+       embedding=model.embed_query(query)
+       return embedding
+else:
+    pass
 def similarity(emb_query,df):   #does the semantic search between the query and the chunks to find related chunks
     #transcript=pd.DataFrame()
     transcript=df.copy()
