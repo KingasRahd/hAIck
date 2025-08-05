@@ -5,6 +5,7 @@ import helper
 import uuid
 import requests
 
+# UI Design
 st.sidebar.title('hAIck')
 st.sidebar.image('pictures/logo.png',width=100)
 st.sidebar.markdown('---')
@@ -17,15 +18,19 @@ st.markdown('---')
 st.sidebar.markdown('###### *Reload on Crash')
 st.sidebar.markdown('---')
 
+# Checking entry condition
+
 if 'Past_Session' not in st.session_state:
     st.session_state['Past_Session']=''
 
+# Extracting video ID from Youtube URL
 try:
 
     pattern = r"(?:v=|\/)([0-9A-Za-z_-]{11})"
     match = re.search(pattern, url)
     vid=match.group(1)
     
+    # Extracting transcript and checking if video ID is changed or not
     if ('Transcript' not in st.session_state) or (st.session_state['VID']!=vid):
 
         st.session_state['VID']=vid
@@ -37,7 +42,7 @@ try:
             transcript=helper.embeddor(transcript)  
             st.session_state['Transcript']=transcript 
         
-
+    # File uploader for uploading previous interactions
     upload=st.sidebar.file_uploader('Import Chat History')
 
     if ((upload is not None) and ('Imported' not in st.session_state)):
@@ -48,7 +53,7 @@ try:
    
         for i,msg in enumerate(st.session_state['Chats']):
             if msg['role']=='user':
-                message(msg['content'],is_user=True,key=uuid.uuid4().hex)
+                message(msg['content'],is_user=True,key=uuid.uuid4().hex) # Generating unique IDs for each conversation text
             else:
                 message(msg['content'],key=uuid.uuid4().hex)
 
@@ -82,8 +87,9 @@ try:
            
     st.session_state['Chat_Index']+=1
 
-    st.sidebar.download_button("Export Chat History",helper.exporter(st.session_state['Chats']))
+    st.sidebar.download_button("Export Chat History",helper.exporter(st.session_state['Chats']))  # Downloading Chat History for future reference
 
+# Exception Handling
 except AttributeError as e:
     pass
 except TypeError as e:

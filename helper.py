@@ -7,8 +7,6 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
 from langchain_google_genai import ChatGoogleGenerativeAI
 import streamlit as st
-import requests
-from bs4 import BeautifulSoup
 import asyncio
 import sys
 
@@ -19,19 +17,19 @@ if sys.version_info >= (3, 10):  # Important if you're using Python 3.10+
     except RuntimeError:
         asyncio.set_event_loop(asyncio.new_event_loop())
 
-
+# loading the API Key
 load_dotenv()
 api_key=os.getenv('API_KEY')
 
-model=GoogleGenerativeAIEmbeddings(model='models/text-embedding-004',google_api_key=api_key,task_type="retrieval_document")
-llm=ChatGoogleGenerativeAI(model='models/gemini-2.5-flash-lite-preview-06-17',google_api_key=api_key)
+model=GoogleGenerativeAIEmbeddings(model='models/text-embedding-004',google_api_key=api_key,task_type="retrieval_document") #embedding model
+llm=ChatGoogleGenerativeAI(model='models/gemini-2.5-flash-lite-preview-06-17',google_api_key=api_key) #LLM model
 
-def transcription(vid):
+def transcription(vid):  #Generates the transcription
     c=0
     text=''
     chunks=[]
     i=0
-    l=['en','hi', 'bn', 'gu', 'as', 'kn', 'ml', 'mr', 'ne', 'or', 'pa', 'sa', 'ta', 'te', 'ur']
+    l=['en','hi', 'bn', 'gu', 'as', 'kn', 'ml', 'mr', 'ne', 'or', 'pa', 'sa', 'ta', 'te', 'ur'] #different languages for the extraction order is given
     yt=YouTubeTranscriptApi()
 
     try:
@@ -57,7 +55,7 @@ def transcription(vid):
     })
     return df
 
-def embeddor(transcript):
+def embeddor(transcript):  #embeds the chunks
     i=0
     embeddings=[]
     while i<transcript.shape[0]:
@@ -67,11 +65,11 @@ def embeddor(transcript):
     transcript['Embedding']=embeddings
     return transcript
 
-def query_embeddor(query):
+def query_embeddor(query):    #embeds the query
     embedding=model.embed_query(query)
     return embedding
 
-def similarity(emb_query,df):
+def similarity(emb_query,df):   #does the semantic search between the query and the chunks to find related chunks
     #transcript=pd.DataFrame()
     transcript=df.copy()
     score=cosine_similarity([emb_query],transcript['Embedding'].tolist())
@@ -80,7 +78,7 @@ def similarity(emb_query,df):
     relevent.sort_index(inplace=True)
     return relevent['Chunk']
 
-def refine_context(context):
+def refine_context(context):   #refines the chunks into one fine text for the query context
     text=context.iloc[0].replace('\t',' ')
     for i in range(1,len(context)):
         present_chunk=context.iloc[i].split('\t')
@@ -95,7 +93,7 @@ def refine_context(context):
 
     return text
 
-def answer(context,query,history,past_session):
+def answer(context,query,history,past_session):      #invokes the LLM
 
     prompt=f"""
 You are an intelligent assistant helping a user understand and analyze a YouTube video.
@@ -127,18 +125,18 @@ Keep answers clear, polite, and avoid overwhelming details.
     response=llm.invoke(prompt)
     return response.content
 
-def real_time_embedder(query,ans,transcript):
+def real_time_embedder(query,ans,transcript):       #embeds the live conversation 
     text = f"User query: {query}\nAI answer: {ans}"
     embedding=model.embed_query(text)
     qna_df=pd.DataFrame({'Chunk':text,'Embedding':[embedding]})
     
     return pd.concat([transcript,qna_df],ignore_index=True).drop_duplicates(['Chunk'])
 
-def exporter(chats):
+def exporter(chats):        #exports the chat history
     chat_history='\n\n~'.join([f"{i['role']}:{i['content']}" for i in chats])
     return chat_history
 
-def importer(file,transcript):
+def importer(file,transcript):      #processes previous conversation and adds them to the database
     
     text=file.read().decode("utf-8")
     content=text.split('\n\n~')
@@ -150,7 +148,7 @@ def importer(file,transcript):
         
     return transcript,text
 
-def past_session_summarize(text):
+def past_session_summarize(text):       #summarizes the past session
     prompt = f"""
 You are a helpful assistant. Summarize the following interaction thoroughly without missing any key details. Ensure that all important points, discussions, and decisions made are captured clearly and in detail. The summary should preserve the original meaning and technical relevance, while being easy to understand.
 
@@ -161,15 +159,3 @@ Text to summarize:
     response=llm.invoke(prompt)
     return response.content
     
-def get_proxy():
-    ip=list()
-    port=list()
-    url='https://free-proxy-list.net/en/'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    rows=soup.find_all('tr')[1:51]
-    for i in rows:
-        data=i.find_all('td')
-        ip.append(data[0].text)
-        port.append(data[1].text)
-    return ip,port
