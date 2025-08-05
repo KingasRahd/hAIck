@@ -100,4 +100,4 @@ Streamlit
 
 YouTube Transcript API
 
-💡 Built by hAIck Team
+### 💡 Built by hAIck Team
