@@ -22,37 +22,7 @@ Whether it's a lecture, tech talk, or tutorial — hAIck makes videos *interacti
 
 ## 🏗️ Architecture Diagram
 
-+-------------------------+
-| YouTube Video URL |
-+-----------+-------------+
-|
-v
-+-------------------------+
-| YouTube Transcript API |
-+-----------+-------------+
-|
-v
-+---------------------------+
-| Transcript Chunker |
-| - Sentence-wise (QnA) |
-| - Segment-wise (Summary) |
-+-----------+---------------+
-|
-v
-+---------------------------+
-| Gemini LLM via LangChain |
-| - QnA Engine |
-| - Summary Generator |
-| - Memory + Context Handler|
-+-----------+---------------+
-|
-v
-+---------------------------+
-| Streamlit Frontend |
-+---------------------------+
-
-yaml
-Copy code
+<pre> +-------------------------+ | YouTube Video URL | +-----------+------------+ | v +-------------------------+ | YouTube Transcript API | +-----------+------------+ | v +----------------------------+ | Transcript Chunker | | - Sentence-wise (QnA) | | - Segment-wise (Summary) | +-----------+----------------+ | v +-----------------------------+ | Gemini LLM via LangChain | | - QnA Engine | | - Summary Generator | | - Memory + Context Handler | +-----------+-----------------+ | v +-----------------------------+ | Streamlit Frontend | +-----------------------------+ </pre>
 
 ---
 
